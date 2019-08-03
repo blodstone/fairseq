@@ -25,9 +25,14 @@ fairseq-preprocess --source-lang document --target-lang summary --trainpref $TEX
 ```bash
 SAVE="save/dynamic_conv_bbc"
 mkdir -p $SAVE
-CUDA_VISIBLE_DEVICES=0 $(which fairseq-train) data  --log-interval 100 --no-progress-bar --max-update 30000 --share-all-embeddings --optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 --weight-decay 1e-3 --criterion label_smoothed_cross_entropy --label-smoothing 0.1 --min-lr 1e-09 --update-freq 16 --attention-dropout 0.1 --keep-last-epochs 10 --ddp-backend=no_c10d  --lr-scheduler cosine --warmup-init-lr 1e-7 --warmup-updates 10000 --lr-shrink 1 --max-lr 0.001 --lr 1e-7 --min-lr 1e-9 --t-mult 1 --lr-period-updates 20000 --arch lightconv --save-dir $SAVE --dropout 0.3 --attention-dropout 0.1 --weight-dropout 0.1  --encoder-glu 1 --decoder-glu 1 --max-tokens 3584
+CUDA_VISIBLE_DEVICES=0 $(which fairseq-train) data  --log-interval 100 --no-progress-bar --max-update 30000 --share-all-embeddings --optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 --weight-decay 1e-3 --criterion label_smoothed_cross_entropy --label-smoothing 0.1 --min-lr 1e-09 --update-freq 16 --attention-dropout 0.1 --keep-last-epochs 10 --ddp-backend=no_c10d  --lr-scheduler cosine --warmup-init-lr 1e-4 --warmup-updates 1000 --lr-shrink 1 --max-lr 0.001 --lr 1e-4 --min-lr 1e-6 --t-mult 1 --lr-period-updates 2000 --arch lightconv --save-dir $SAVE --dropout 0.3 --attention-dropout 0.1 --weight-dropout 0.1  --encoder-glu 1 --decoder-glu 1 --max-sentences 16
 ```
-
+# Translate 
+'''bash
+OUT="out/dynamic_conv_bbc"
+mkdir -p $OUT
+CUDA_VISIBLE_DEVICES=0 $(which fairseq-generate) data --path $SAVE/checkpoint_best.pt --batch-size 1 --beam 10 --source-lang document --target-lang summary > $OUT/test-output-dynconv-checkpoint-best.pt
+'''
 
 
 
