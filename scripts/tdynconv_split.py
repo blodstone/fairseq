@@ -36,9 +36,9 @@ if __name__ == '__main__':
             print('{} not found'.format(doc_id))
             continue
         output[data_dict[doc_id]]['doc'].append(
-            ' '.join([sent.lower().strip().encode(encoding='UTF-8') for sent in doc_infile.readlines()]))
+            ' '.join([sent.lower().strip() for sent in doc_infile.readlines()]))
         output[data_dict[doc_id]]['summ'].append(
-            ' '.join([sent.lower().strip().encode(encoding='UTF-8') for sent in summ_infile.readlines()]))
+            ' '.join([sent.lower().strip() for sent in summ_infile.readlines()]))
         summ_infile.close()
         doc_infile.close()
 
