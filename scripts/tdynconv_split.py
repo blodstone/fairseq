@@ -35,10 +35,15 @@ if __name__ == '__main__':
         if doc_id not in data_dict:
             print('{} not found'.format(doc_id))
             continue
-        doc = ' '.join([sent.lower().strip() for sent in doc_infile.readlines()]).split()[:400]
-        summ = ' '.join([sent.lower().strip() for sent in summ_infile.readlines()]).split()[:90]
-        output[data_dict[doc_id]]['doc'].append(' '.join(doc))
-        output[data_dict[doc_id]]['summ'].append(' '.join(summ))
+        doc = []
+        for sent in doc_infile.readlines():
+            doc.append(sent.lower().strip())
+            if len(doc) > 400:
+                break
+        doc = ' '.join(doc)
+        summ = ' '.join([sent.lower().strip() for sent in summ_infile.readlines()])
+        output[data_dict[doc_id]]['doc'].append(doc)
+        output[data_dict[doc_id]]['summ'].append(summ)
         summ_infile.close()
         doc_infile.close()
 
