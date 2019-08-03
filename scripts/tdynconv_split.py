@@ -44,9 +44,9 @@ if __name__ == '__main__':
 
     for dtype in data_types:
         summ_file = open(os.path.join(
-            output_directory, 'tgt.{}.txt'.format(dtype)), 'w')
+            output_directory, '{}.summary'.format(dtype)), 'w')
         doc_file = open(os.path.join(
-            output_directory, 'src.{}.txt'.format(dtype)), 'w')
+            output_directory, '{}.document'.format(dtype)), 'w')
         summ_file.write('\n'.join(output[dtype]['summ']))
         doc_file.write('\n'.join(output[dtype]['doc']))
         summ_file.close()

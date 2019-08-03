@@ -16,8 +16,29 @@ Run the following script to split and preprocess the BBC dataset.
 
 ```bash
 ./scripts/tdynconv_gen_data.sh
+
+TEXT=data/bbc-split
+python preprocess.py --source-lang document --target-lang summary --trainpref $TEXT/train --validpref $TEXT/validation --testpref $TEXT/test --destdir ./data --joined-dictionary --nwordstgt 50000 --nwordssrc 50000
 ```
 
+# Training Dynamic Convolution
+```bash
+SAVE="save/dynamic_conv_bbc"
+mkdir -p $SAVE
+python -m torch.distributed.launch --nproc_per_node 8 $(which fairseq-train) \
+    data-bin/wmt16_en_de_bpe32k --fp16  --log-interval 100 --no-progress-bar \
+    --max-update 30000 --share-all-embeddings --optimizer adam \
+    --adam-betas '(0.9, 0.98)' --clip-norm 0.0 --weight-decay 0.0 \
+    --criterion label_smoothed_cross_entropy --label-smoothing 0.1 \
+    --min-lr 1e-09 --update-freq 16 --attention-dropout 0.1 --keep-last-epochs 10 \
+    --ddp-backend=no_c10d --max-tokens 3584 \
+    --lr-scheduler cosine --warmup-init-lr 1e-7 --warmup-updates 10000 \
+    --lr-shrink 1 --max-lr 0.001 --lr 1e-7 --min-lr 1e-9 --warmup-init-lr 1e-07 \
+    --t-mult 1 --lr-period-updates 20000 \
+    --arch lightconv_wmt_en_de_big --save-dir $SAVE \
+    --dropout 0.3 --attention-dropout 0.1 --weight-dropout 0.1 \
+    --encoder-glu 1 --decoder-glu 1
+```
 
 
 
