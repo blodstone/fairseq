@@ -15,7 +15,7 @@ The BBC dataset is from [Extreme Summarization (XSum)](https://github.com/Edinbu
 Run the following script to split and preprocess the BBC dataset.
 
 ```bash
-./scripts/tdynconv_gen_data.sh
+./scripts/tdynconv_gen_data.sh data.tar.gz
 
 TEXT=data/bbc-split
 fairseq-preprocess --source-lang document --target-lang summary --trainpref $TEXT/train --validpref $TEXT/validation --testpref $TEXT/test --destdir ./data --joined-dictionary --nwordstgt 50000 --nwordssrc 50000 --workers 8

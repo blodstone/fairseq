@@ -36,9 +36,12 @@ if __name__ == '__main__':
             print('{} not found'.format(doc_id))
             continue
         doc = []
+        doc_len = 0
         for sent in doc_infile.readlines():
-            doc.append(sent.lower().strip())
-            if len(doc) > 400:
+            sent = sent.lower().strip()
+            doc.append(sent)
+            doc_len += len(sent)
+            if doc_len > 400:
                 break
         doc = ' '.join(doc)
         summ = ' '.join([sent.lower().strip() for sent in summ_infile.readlines()])
